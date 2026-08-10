@@ -113,8 +113,8 @@ async function logoutUser(req, res) {
 
     res.clearCookie("token")
 
-    await redis.set(token, Date.now().toString())
-
+    await redis.set(token, "blacklisted", "EX", 60 * 60 * 24 * 3);
+    
     res.status(201).json({
         message: "logout successfully."
     })
