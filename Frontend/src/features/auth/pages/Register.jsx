@@ -7,7 +7,7 @@ import { useAuth } from '../hooks/useAuth'
 const Register = () => {
 
   const [username, setUsername] = useState("")
-  const [emil, setEmail] = useState("")
+  const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
   const navigate = useNavigate()

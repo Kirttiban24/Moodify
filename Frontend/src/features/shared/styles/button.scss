@@ -1,18 +1,34 @@
-.button{
-  padding-inline: 1rem;
-  padding-block: 0.5rem;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  background-color: #26810b;
-  color: #fff;
-  border: none;
-  outline: none;
-  border-radius: 0.75rem;
-  font-size: 1rem;
-  cursor: pointer;
+@use "./variables" as *;
 
-  &:hover {
-    background-color: #26a517;
-  }
+.button {
+
+    width: 100%;
+    padding: 15px;
+
+    border: none;
+    border-radius: $radius-md;
+
+    background: $primary;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    transition: $transition;
+
+    &:hover {
+
+        background: $primary-hover;
+
+        transform: translateY(-2px);
+    }
+
+    &:disabled {
+
+        cursor: not-allowed;
+        opacity: .6;
+    }
 }

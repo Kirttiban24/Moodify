@@ -1,0 +1,79 @@
+@use "./variables" as *;
+
+.form-group {
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+
+    margin-bottom: 20px;
+
+    label {
+
+        color: $text-primary;
+
+        font-size: 14px;
+
+        font-weight: 500;
+    }
+
+    input {
+
+        width: 100%;
+
+        padding: 14px 16px;
+
+        border-radius: $radius-md;
+
+        border: 1px solid $border;
+
+        background: $surface;
+
+        color: white;
+
+        outline: none;
+
+        transition: $transition;
+
+        &::placeholder {
+
+            color: $text-secondary;
+        }
+
+        &:focus {
+
+            border-color: $primary;
+
+            box-shadow: 0 0 0 4px rgba(124,58,237,.2);
+        }
+    }
+}
+.input-wrapper{
+
+position:relative;
+
+display:flex;
+
+align-items:center;
+
+}
+
+.input-icon{
+
+position:absolute;
+
+left:18px;
+
+font-size:20px;
+
+color:#8B5CF6;
+
+pointer-events:none;
+
+}
+
+.input-wrapper input{
+
+padding-left:52px;
+}
