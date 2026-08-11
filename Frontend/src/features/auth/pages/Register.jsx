@@ -1,3 +1,4 @@
+import { FaHeadphonesAlt } from "react-icons/fa";
 import React, { useState } from 'react'
 import "../style/register.scss"
 import FormGroup from '../components/FormGroup'
@@ -23,46 +24,79 @@ const Register = () => {
   }
 
   return (
-    <div className="register-page">
-      <div className="form-container">
-        <h2>Register</h2>
-        <form onSubmit={handleSubmit}>
-          <FormGroup
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            id="username" 
-            name="username"
-            label="Name" 
-            type="text" 
-            placeholder="Enter your name" 
-            required
-           />
-          <FormGroup
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            id="email"
-            name="email"
-            label="Email"
-            type="email"
-            placeholder="Enter your email"
-            required
-          />
-          <FormGroup
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            id="password"
-            name="password"
-            label="Password"
-            type="password"
-            placeholder="Enter your password"
-            required
-          />
-          <button className="button" type="submit">Register</button>
-        </form>
-        <p>Already have an account? <Link to="/login">Login</Link></p>
-      </div>
-    </div>
-  )
+        <main className="register-page">
+        <div className="overlay"></div>
+
+            <div className="register-card">
+                <div className="logo">
+                    <div className="logo-icon">
+                        <FaHeadphonesAlt />
+                    </div>
+                    <h1>Moodify</h1>
+                    <p>Music That Understands Your Mood</p>
+                </div>
+
+                <div className="form-container">
+                    <h2>Create Account 🚀</h2>
+
+                    <span>
+                        Join Moodify and discover music based on your emotions.
+                    </span>
+
+                    <form onSubmit={handleSubmit}>
+                        <FormGroup
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        label="Username"
+                        id="username"
+                        name="username"
+                        type="text"
+                        placeholder="Enter your username"
+                        required
+                        />
+
+                        <FormGroup
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        label="Email"
+                        id="email"
+                        name="email"
+                        type="email"
+                        placeholder="Enter your email"
+                        required
+                        />
+
+                        <FormGroup
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        label="Password"
+                        id="password"
+                        name="password"
+                        type="password"
+                        placeholder="Enter your password"
+                        required
+                        />
+
+                        <button
+                        className="button"
+                        type="submit"
+                        disabled={loading}
+                        >
+                        {loading ? "Creating Account..." : "Create Account →"}
+                        </button>
+                    </form>
+
+                    <p className="bottom-text">
+                        Already have an account?
+
+                        <Link to="/login">
+                        Login
+                        </Link>
+                    </p>
+                </div>
+            </div>
+        </main>
+    )
 }
 
 export default Register
