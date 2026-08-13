@@ -17,7 +17,7 @@ async function uploadSong(req, res){
             folder: "/moodify/songs"
         }),
         storageService.uploadFile({
-            buffer: tags.image.image,
+            buffer: tags.image.imageBuffer,
             filename: tags.title + ".jpeg",
             folder: "/moodify/posters"
         })
@@ -36,4 +36,17 @@ async function uploadSong(req, res){
     })
 }
 
-module.exports = { uploadSong }
+async function getSong(req, res) {
+    const { mood } = req.query
+
+    const song = await songModel.findOne({
+        mood
+    })
+
+    res.status(200).json({
+        message: "song fetched successfully",
+        song
+    })
+}
+
+module.exports = { uploadSong, getSong }
