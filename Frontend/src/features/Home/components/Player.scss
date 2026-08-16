@@ -1,0 +1,66 @@
+.player {
+  align-items: center;
+  background: #111827;
+  border-top: 1px solid #334155;
+  bottom: 0;
+  display: grid;
+  gap: 24px;
+  grid-template-columns: minmax(210px, 1fr) minmax(300px, 2fr) minmax(210px, 1fr);
+  min-height: 104px;
+  padding: 16px 28px;
+  position: fixed;
+  width: 100%;
+  z-index: 10;
+}
+
+.player button {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: #e2e8f0;
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  min-height: 36px;
+  min-width: 36px;
+  position: relative;
+}
+
+.player button:disabled,
+.player input:disabled,
+.player select:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.player__details,
+.player__settings,
+.player__controls,
+.player__timeline {
+  align-items: center;
+  display: flex;
+}
+
+.player__details { gap: 12px; min-width: 0; }
+.player__cover { background: #1e293b; border-radius: 4px; height: 64px; object-fit: cover; width: 64px; }
+.player__track { display: grid; gap: 5px; min-width: 0; }
+.player__track strong { color: #f8fafc; font-size: 14px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.player__track span { color: #94a3b8; font-size: 12px; text-transform: capitalize; }
+.player__main { display: grid; gap: 8px; }
+.player__controls { gap: 14px; justify-content: center; }
+.player__controls button span { bottom: 4px; font-size: 9px; font-weight: 700; position: absolute; }
+.player__play { background: #22c55e !important; border-radius: 50% !important; color: #062a14 !important; }
+.player__timeline { color: #94a3b8; font-size: 11px; gap: 10px; }
+.player input[type="range"] { accent-color: #22c55e; cursor: pointer; min-width: 0; }
+.player__timeline input { flex: 1; }
+.player__settings { gap: 8px; justify-content: flex-end; }
+.player__settings input { width: 88px; }
+.player select { background: #1e293b; border: 1px solid #475569; border-radius: 4px; color: #e2e8f0; padding: 6px 8px; }
+.sr-only { height: 1px; margin: -1px; overflow: hidden; position: absolute; width: 1px; }
+
+@media (max-width: 720px) {
+  .player { gap: 12px; grid-template-columns: 1fr auto; padding: 12px 16px; }
+  .player__main { grid-column: 1 / -1; grid-row: 2; }
+  .player__settings input { display: none; }
+  .player__cover { height: 46px; width: 46px; }
+}
