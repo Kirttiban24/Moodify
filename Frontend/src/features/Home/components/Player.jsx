@@ -21,9 +21,33 @@ const Player = () => {
   const hasSong = Boolean(song?.url)
 
   useEffect(() => {
-    setIsPlaying(false)
-    setCurrentTime(0)
-    setDuration(0)
+
+  setIsPlaying(false)
+  setCurrentTime(0)
+  setDuration(0)
+
+  if (!song?.url || !audioRef.current) {
+    return
+  }
+
+  const audio = audioRef.current
+
+  audio.pause()
+  audio.currentTime = 0
+  audio.load()
+
+  audio.play()
+    .then(() => {
+      setIsPlaying(true)
+    })
+    .catch((error) => {
+      console.error(
+        "Unable to autoplay the selected song.",
+        error
+      )
+
+      setIsPlaying(false)
+    })
   }, [song?.url])
 
   function formatTime(time) {

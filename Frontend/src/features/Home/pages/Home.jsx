@@ -1,26 +1,47 @@
-import React from "react";
+import React, { useMemo, useState } from "react";
+
 import FaceExpression from "../../Expression/components/FaceExpression";
 import Player from "../components/Player";
+import MoodLibrary from "../components/MoodLibrary";
+
+import { convertEmotionToMood } from "../utils/moodUtils";
 import { useMoodSongs } from "../hooks/useMoodSongs";
 
 const Home = () => {
 
-    const {
-        happySongs,
-        sadSongs,
-        surprisedSongs,
-        neutralSongs
-    } = useMoodSongs();
+    const [currentEmotion, setCurrentEmotion] =
+        useState(null);
 
-    console.log("Happy:", happySongs);
-    console.log("Sad:", sadSongs);
-    console.log("Surprised:", surprisedSongs);
-    console.log("Neutral:", neutralSongs);
+    const currentMood = useMemo(() => {
+
+        return convertEmotionToMood(
+            currentEmotion
+        );
+
+    }, [currentEmotion]);
+
+    const {
+        songs,
+        loading,
+    } = useMoodSongs(currentMood);
 
     return (
         <>
-            <FaceExpression />
+
+            <FaceExpression
+                onEmotionDetected={
+                    setCurrentEmotion
+                }
+            />
+
+            <MoodLibrary
+                songs={songs}
+                mood={currentMood}
+                loading={loading}
+            />
+
             <Player />
+
         </>
     );
 };

@@ -1,46 +1,33 @@
 import { useEffect, useState } from "react";
 import { getSongs } from "../service/song.api";
 
-export const useMoodSongs = () => {
+export const useMoodSongs = (mood) => {
 
-    const [happySongs, setHappySongs] = useState([]);
-    const [sadSongs, setSadSongs] = useState([]);
-    const [surprisedSongs, setSurprisedSongs] = useState([]);
-    const [neutralSongs, setNeutralSongs] = useState([]);
+    const [songs, setSongs] = useState([]);
+
+    const [loading, setLoading] =
+        useState(false);
+
 
     useEffect(() => {
 
-        async function fetchSongs() {
+        if (!mood) {
+            setSongs([]);
+            return;
+        }
+
+
+        async function fetchMoodSongs() {
 
             try {
 
-                const [
-                    happy,
-                    sad,
-                    surprised,
-                    neutral
-                ] = await Promise.all([
+                setLoading(true);
 
-                    getSongs({ mood: "happy" }),
+                const data =
+                    await getSongs({ mood });
 
-                    getSongs({ mood: "sad" }),
-
-                    getSongs({ mood: "surprised" }),
-
-                    getSongs({ mood: "neutral" })
-
-                ]);
-
-                setHappySongs(happy.songs || []);
-
-                setSadSongs(sad.songs || []);
-
-                setSurprisedSongs(
-                    surprised.songs || []
-                );
-
-                setNeutralSongs(
-                    neutral.songs || []
+                setSongs(
+                    data.songs || []
                 );
 
             } catch (error) {
@@ -50,18 +37,24 @@ export const useMoodSongs = () => {
                     error
                 );
 
+                setSongs([]);
+
+            } finally {
+
+                setLoading(false);
+
             }
 
         }
 
-        fetchSongs();
 
-    }, []);
+        fetchMoodSongs();
+
+    }, [mood]);
+
 
     return {
-        happySongs,
-        sadSongs,
-        surprisedSongs,
-        neutralSongs
+        songs,
+        loading,
     };
 };
