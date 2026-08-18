@@ -48,7 +48,7 @@ export default function FaceExpression() {
         }}
       >
         {isDetecting
-          ? "Detecting..."
+          ? "🔍 Analyzing your mood..."
           : "Start Detection"}
       </button>
 

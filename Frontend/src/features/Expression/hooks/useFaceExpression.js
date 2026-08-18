@@ -1,16 +1,7 @@
-// src/features/Expression/hooks/useFaceExpression.js
 
-import {
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useRef, useState } from "react";
+import { createLandmarker, startCamera, detectCurrentEmotion } from "../utils/mediapipeUtils";
 
-import {
-  createLandmarker,
-  startCamera,
-  detectCurrentEmotion,
-} from "../utils/mediapipeUtils";
 
 export function useFaceExpression() {
   const videoRef = useRef(null);
@@ -26,9 +17,7 @@ export function useFaceExpression() {
 
   useEffect(() => {
     async function init() {
-      const landmarker =
-        await createLandmarker();
-
+      const landmarker = await createLandmarker();
       setFaceLandmarker(landmarker);
     }
 
@@ -46,13 +35,17 @@ export function useFaceExpression() {
   }, []);
 
   useEffect(() => {
-    if (
-      !faceLandmarker ||
-      !isDetecting
-    )
+    if ( !faceLandmarker || !isDetecting)
+
       return;
 
     let animationFrameId;
+
+    const detectedEmotions = [];
+
+    const startTime = performance.now()
+
+    const DETECTION_DURATION = 3000;
 
     const detect = () => {
       const currentEmotion =
@@ -62,7 +55,30 @@ export function useFaceExpression() {
         );
 
       if (currentEmotion) {
-        setEmotion(currentEmotion);
+        detectedEmotions.push(currentEmotion);
+      }
+
+      const elapsedTime = performance.now() - startTime;
+
+      if (elapsedTime >= DETECTION_DURATION) {
+
+        if (detectedEmotions.length > 0) {
+          const emotionCount = {}
+
+          detectedEmotions.forEach((emotion) => {
+            emotionCount[emotion] = (emotionCount[emotion] || 0) + 1;
+          })
+
+          const finalEmotion = 
+            Object.keys(emotionCount).reduce((a, b) => emotionCount[a] > emotionCount[b] ? a : b )
+
+            setEmotion(finalEmotion)
+        }else {
+          setEmotion("No face detected")
+        }
+
+        setIsDetecting(false)
+        return;
       }
 
       animationFrameId =
@@ -72,9 +88,7 @@ export function useFaceExpression() {
     detect();
 
     return () =>
-      cancelAnimationFrame(
-        animationFrameId
-      );
+      cancelAnimationFrame(animationFrameId);
   }, [
     faceLandmarker,
     isDetecting,
