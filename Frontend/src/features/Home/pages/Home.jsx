@@ -7,6 +7,8 @@ import MoodLibrary from "../components/MoodLibrary";
 import { convertEmotionToMood } from "../utils/moodUtils";
 import { useMoodSongs } from "../hooks/useMoodSongs";
 
+import "./Home.scss";
+
 const Home = () => {
 
     const [currentEmotion, setCurrentEmotion] =
@@ -26,23 +28,26 @@ const Home = () => {
     } = useMoodSongs(currentMood);
 
     return (
-        <>
+        <div className="home-shell">
 
+            {/* Left: Mood Detection */}
             <FaceExpression
                 onEmotionDetected={
                     setCurrentEmotion
                 }
             />
 
+            {/* Center: Music Player */}
+            <Player />
+
+            {/* Right: Mood Library */}
             <MoodLibrary
                 songs={songs}
                 mood={currentMood}
                 loading={loading}
             />
 
-            <Player />
-
-        </>
+        </div>
     );
 };
 

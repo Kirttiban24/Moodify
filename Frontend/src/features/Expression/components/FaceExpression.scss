@@ -1,0 +1,562 @@
+.face-expression {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 1rem;
+
+    height: 100%;
+
+    padding: 1.35rem;
+
+    border-radius: 26px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(30, 41, 59, .82),
+            rgba(15, 23, 42, .76)
+        );
+
+    border:
+        1px solid
+        rgba(255, 255, 255, .08);
+
+    backdrop-filter:
+        blur(24px);
+
+    box-shadow:
+        0 25px 60px
+        rgba(0, 0, 0, .38);
+
+}
+
+
+/* ================================= */
+/* HEADER */
+/* ================================= */
+
+.face-expression__eyebrow {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: .45rem;
+
+    margin-bottom: .6rem;
+
+    color: #a78bfa;
+
+    font-size: .65rem;
+
+    font-weight: 700;
+
+    letter-spacing: .12em;
+
+}
+
+
+.face-expression__header h2 {
+
+    margin: 0 0 .4rem;
+
+    color: #f8fafc;
+
+    font-size: 1.35rem;
+
+}
+
+
+.face-expression__header p {
+
+    margin: 0;
+
+    color: #94a3b8;
+
+    font-size: .78rem;
+
+    line-height: 1.5;
+
+}
+
+
+/* ================================= */
+/* CAMERA */
+/* ================================= */
+
+.face-expression__camera {
+
+    position: relative;
+
+    overflow: hidden;
+
+    width: 100%;
+
+    aspect-ratio: 4 / 3;
+
+    border-radius: 20px;
+
+    background:
+        radial-gradient(
+            circle at center,
+            #1e293b,
+            #0b1020
+        );
+
+    border:
+        1px solid
+        rgba(255, 255, 255, .08);
+
+}
+
+
+.face-expression__camera video {
+
+    display: block;
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    transform: scaleX(-1);
+
+}
+
+
+/* ================================= */
+/* CAMERA PLACEHOLDER */
+/* ================================= */
+
+.face-expression__camera-placeholder {
+
+    position: absolute;
+
+    inset: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: .7rem;
+
+    color: #64748b;
+
+}
+
+
+.face-expression__camera-placeholder svg {
+
+    font-size: 2rem;
+
+    opacity: .6;
+
+}
+
+
+.face-expression__camera-placeholder span {
+
+    font-size: .75rem;
+
+}
+
+
+/* ================================= */
+/* SCANNING */
+/* ================================= */
+
+.face-expression__camera--scanning {
+
+    border-color:
+        rgba(139, 92, 246, .55);
+
+    box-shadow:
+        0 0 0 1px
+        rgba(139, 92, 246, .12),
+        0 15px 40px
+        rgba(139, 92, 246, .18);
+
+}
+
+
+/* ================================= */
+/* SCAN OVERLAY */
+/* ================================= */
+
+.face-expression__scan-overlay {
+
+    position: absolute;
+
+    inset: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    pointer-events: none;
+
+}
+
+
+.face-expression__scan-overlay span {
+
+    position: absolute;
+
+    top: 1rem;
+
+    padding: .4rem .7rem;
+
+    border-radius: 999px;
+
+    color: white;
+
+    background:
+        rgba(5, 8, 22, .7);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, .1);
+
+    backdrop-filter: blur(10px);
+
+    font-size: .7rem;
+
+    font-weight: 600;
+
+}
+
+
+/* ================================= */
+/* SCAN LINE */
+/* ================================= */
+
+.face-expression__scan-line {
+
+    position: absolute;
+
+    left: 5%;
+
+    right: 5%;
+
+    height: 2px;
+
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            #8b5cf6,
+            #ec4899,
+            transparent
+        );
+
+    box-shadow:
+        0 0 15px
+        rgba(139, 92, 246, .8);
+
+    animation:
+        scan 1.5s
+        ease-in-out
+        infinite;
+
+}
+
+
+@keyframes scan {
+
+    0% {
+        top: 10%;
+    }
+
+    50% {
+        top: 90%;
+    }
+
+    100% {
+        top: 10%;
+    }
+
+}
+
+
+/* ================================= */
+/* RESULT */
+/* ================================= */
+
+.face-expression__result {
+
+    position: absolute;
+
+    left: .8rem;
+
+    right: .8rem;
+
+    bottom: .8rem;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: .7rem;
+
+    padding: .7rem;
+
+    border-radius: 16px;
+
+    background:
+        rgba(5, 8, 22, .78);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, .1);
+
+    backdrop-filter:
+        blur(14px);
+
+}
+
+
+.face-expression__result-icon {
+
+    width: 42px;
+
+    height: 42px;
+
+    flex-shrink: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 13px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #8b5cf6,
+            #ec4899
+        );
+
+    box-shadow:
+        0 8px 20px
+        rgba(139, 92, 246, .3);
+
+}
+
+
+.face-expression__result-icon svg {
+
+    font-size: 1.25rem;
+
+}
+
+
+.face-expression__result {
+
+    span {
+
+        display: block;
+
+        margin-bottom: .15rem;
+
+        color: #94a3b8;
+
+        font-size: .65rem;
+
+    }
+
+
+    strong {
+
+        display: block;
+
+        color: white;
+
+        font-size: .9rem;
+
+    }
+
+}
+
+
+/* ================================= */
+/* STATUS */
+/* ================================= */
+
+.face-expression__status {
+
+    color: #94a3b8;
+
+    font-size: .75rem;
+
+}
+
+
+/* ================================= */
+/* BUTTON */
+/* ================================= */
+
+.face-expression__scan-button {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: .6rem;
+
+    width: 100%;
+
+    padding: .8rem 1rem;
+
+    border: none;
+
+    border-radius: 13px;
+
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #8b5cf6,
+            #ec4899
+        );
+
+    box-shadow:
+        0 12px 28px
+        rgba(139, 92, 246, .25);
+
+    cursor: pointer;
+
+    font-size: .85rem;
+
+    font-weight: 700;
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+
+}
+
+
+.face-expression__scan-button:hover:not(:disabled) {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 18px 35px
+        rgba(139, 92, 246, .38);
+
+}
+
+
+.face-expression__scan-button:disabled {
+
+    opacity: .55;
+
+    cursor: not-allowed;
+
+}
+
+
+.face-expression__button-icon {
+
+    display: flex;
+
+    align-items: center;
+
+}
+
+
+/* ================================= */
+/* RESULT DESCRIPTION */
+/* ================================= */
+
+.face-expression__result-text {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: .2rem;
+
+    padding: .75rem;
+
+    border-radius: 13px;
+
+    background:
+        rgba(255, 255, 255, .035);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, .06);
+
+}
+
+
+.face-expression__result-text strong {
+
+    color: #f8fafc;
+
+    font-size: .78rem;
+
+}
+
+
+.face-expression__result-text span {
+
+    color: #64748b;
+
+    font-size: .7rem;
+
+    line-height: 1.4;
+
+}
+
+
+/* ================================= */
+/* REDUCED MOTION */
+/* ================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .face-expression__scan-line {
+
+        animation: none;
+
+        top: 50%;
+
+    }
+
+}
+
+
+/* ================================= */
+/* MOBILE */
+/* ================================= */
+
+@media (max-width: 760px) {
+
+    .face-expression {
+
+        padding: 1.1rem;
+
+        border-radius: 22px;
+
+    }
+
+}

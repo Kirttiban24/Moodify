@@ -34,6 +34,8 @@ export async function startCamera(videoRef) {
     });
 
   videoRef.current.srcObject = stream;
+
+  return stream;
 }
 
 export function detectCurrentEmotion(

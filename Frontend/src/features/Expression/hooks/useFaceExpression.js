@@ -1,103 +1,402 @@
-
 import { useEffect, useRef, useState } from "react";
-import { createLandmarker, startCamera, detectCurrentEmotion } from "../utils/mediapipeUtils";
+
+import {
+    createLandmarker,
+    startCamera,
+    detectCurrentEmotion,
+} from "../utils/mediapipeUtils";
 
 
 export function useFaceExpression() {
-  const videoRef = useRef(null);
 
-  const [faceLandmarker, setFaceLandmarker] =
-    useState(null);
+    const videoRef = useRef(null);
 
-  const [emotion, setEmotion] =
-    useState("Click Start Detection");
+    const streamRef = useRef(null);
 
-  const [isDetecting, setIsDetecting] =
-    useState(false);
+    const animationFrameRef = useRef(null);
 
-  useEffect(() => {
-    async function init() {
-      const landmarker = await createLandmarker();
-      setFaceLandmarker(landmarker);
-    }
 
-    init();
-  }, []);
+    const [faceLandmarker, setFaceLandmarker] =
+        useState(null);
 
-  useEffect(() => {
-    async function initCamera() {
-      if (videoRef.current) {
-        await startCamera(videoRef);
-      }
-    }
+    const [emotion, setEmotion] =
+        useState(null);
 
-    initCamera();
-  }, []);
+    const [isDetecting, setIsDetecting] =
+        useState(false);
 
-  useEffect(() => {
-    if ( !faceLandmarker || !isDetecting)
+    const [cameraReady, setCameraReady] =
+        useState(false);
 
-      return;
+    const [cameraError, setCameraError] =
+        useState(null);
 
-    let animationFrameId;
+    const [hasCompletedScan, setHasCompletedScan] =
+        useState(false);
 
-    const detectedEmotions = [];
+    const [remainingSeconds, setRemainingSeconds] =
+        useState(3);
 
-    const startTime = performance.now()
 
-    const DETECTION_DURATION = 3000;
+    /*
+    =========================================
+    Load MediaPipe
+    =========================================
+    */
 
-    const detect = () => {
-      const currentEmotion =
-        detectCurrentEmotion(
-          faceLandmarker,
-          videoRef
-        );
+    useEffect(() => {
 
-      if (currentEmotion) {
-        detectedEmotions.push(currentEmotion);
-      }
+        async function init() {
 
-      const elapsedTime = performance.now() - startTime;
+            try {
 
-      if (elapsedTime >= DETECTION_DURATION) {
+              const landmarker =
+                await createLandmarker();
 
-        if (detectedEmotions.length > 0) {
-          const emotionCount = {}
+              setFaceLandmarker(landmarker);
 
-          detectedEmotions.forEach((emotion) => {
-            emotionCount[emotion] = (emotionCount[emotion] || 0) + 1;
-          })
+            } catch (error) {
 
-          const finalEmotion = 
-            Object.keys(emotionCount).reduce((a, b) => emotionCount[a] > emotionCount[b] ? a : b )
+              console.error(
+                "Unable to load face detection.",
+                  error
+                );
 
-            setEmotion(finalEmotion)
-        }else {
-          setEmotion("No face detected")
+              setCameraError(
+                "Mood detection could not start."
+              );
+
+            }
+
         }
 
-        setIsDetecting(false)
-        return;
-      }
+        init();
 
-      animationFrameId =
-        requestAnimationFrame(detect);
+    }, []);
+
+
+    /*
+    =========================================
+    Stop Camera
+    =========================================
+    */
+
+    function stopCamera() {
+
+        if (streamRef.current) {
+
+            streamRef.current
+                .getTracks()
+                .forEach((track) => track.stop());
+
+            streamRef.current = null;
+
+        }
+
+        if (videoRef.current) {
+
+            videoRef.current.srcObject = null;
+
+        }
+
+        setCameraReady(false);
+
+    }
+
+
+    /*
+    =========================================
+    Start Detection
+    =========================================
+    */
+
+    async function startDetection() {
+
+        if (
+            !faceLandmarker ||
+            isDetecting
+        ) {
+            return;
+        }
+
+
+        try {
+
+            setCameraError(null);
+
+            setEmotion(null);
+
+            setHasCompletedScan(false);
+
+            setRemainingSeconds(3);
+
+            setIsDetecting(true);
+
+
+            /*
+            Start camera only when
+            user clicks detection.
+            */
+
+            const stream = await startCamera(videoRef);
+
+            streamRef.current = stream;
+
+            setCameraReady(true);
+
+
+        } catch (error) {
+
+            console.error(
+                "Unable to start camera.",
+                error
+            );
+
+            setCameraReady(false);
+
+            setIsDetecting(false);
+
+            setCameraError(
+                "Camera access is blocked. Allow permission and try again."
+            );
+
+        }
+
+    }
+
+
+    /*
+    =========================================
+    Detection Loop
+    =========================================
+    */
+
+    useEffect(() => {
+
+        if (
+            !faceLandmarker ||
+            !isDetecting ||
+            !cameraReady
+        ) {
+            return;
+        }
+
+
+        const detectedEmotions = [];
+
+        const startTime =
+            performance.now();
+
+        const DETECTION_DURATION =
+            3000;
+
+
+        function detect() {
+
+            const currentEmotion =
+                detectCurrentEmotion(
+                    faceLandmarker,
+                    videoRef
+                );
+
+
+            if (
+                currentEmotion &&
+                currentEmotion !== "No Face" &&
+                currentEmotion !== "No face detected"
+            ) {
+
+                detectedEmotions.push(
+                    currentEmotion
+                );
+
+            }
+
+
+            /*
+            =====================================
+            Countdown
+            =====================================
+            */
+
+            const elapsed =
+                performance.now() -
+                startTime;
+
+
+            const remaining =
+                Math.max(
+                    0,
+                    Math.ceil(
+                        (DETECTION_DURATION - elapsed) /
+                        1000
+                    )
+                );
+
+
+            setRemainingSeconds(
+                remaining
+            );
+
+
+            /*
+            =====================================
+            Detection Finished
+            =====================================
+            */
+
+            if (
+                elapsed >=
+                DETECTION_DURATION
+            ) {
+
+                let finalEmotion =
+                    "No face detected";
+
+
+                if (
+                    detectedEmotions.length > 0
+                ) {
+
+                    const emotionCount = {};
+
+
+                    detectedEmotions.forEach(
+                        (detected) => {
+
+                            emotionCount[detected] =
+                                (
+                                    emotionCount[detected] ||
+                                    0
+                                ) + 1;
+
+                        }
+                    );
+
+
+                    finalEmotion =
+                        Object.keys(
+                            emotionCount
+                        ).reduce(
+                            (a, b) =>
+                                emotionCount[a] >
+                                emotionCount[b]
+                                    ? a
+                                    : b
+                        );
+
+                }
+
+
+                setEmotion(
+                    finalEmotion
+                );
+
+
+                setHasCompletedScan(
+                    true
+                );
+
+                setIsDetecting(
+                    false
+                );
+
+                setRemainingSeconds(0);
+
+
+                /*
+                IMPORTANT:
+                Turn camera OFF after scan.
+                */
+
+                stopCamera();
+
+                return;
+
+            }
+
+
+            animationFrameRef.current =
+                requestAnimationFrame(
+                    detect
+                );
+
+        }
+
+
+        detect();
+
+
+        return () => {
+
+            if (
+                animationFrameRef.current
+            ) {
+
+                cancelAnimationFrame(
+                    animationFrameRef.current
+                );
+
+            }
+
+        };
+
+    }, [
+        faceLandmarker,
+        isDetecting,
+        cameraReady,
+    ]);
+
+
+    /*
+    =========================================
+    Cleanup
+    =========================================
+    */
+
+    useEffect(() => {
+
+        return () => {
+
+            if (
+                animationFrameRef.current
+            ) {
+
+                cancelAnimationFrame(
+                    animationFrameRef.current
+                );
+
+            }
+
+            stopCamera();
+
+        };
+
+    }, []);
+
+
+    return {
+
+        videoRef,
+
+        emotion,
+
+        isDetecting,
+
+        startDetection,
+
+        cameraReady,
+
+        cameraError,
+
+        hasCompletedScan,
+
+        remainingSeconds,
+
+        canDetect:
+            Boolean(faceLandmarker) &&
+            !isDetecting,
+
     };
 
-    detect();
-
-    return () =>
-      cancelAnimationFrame(animationFrameId);
-  }, [
-    faceLandmarker,
-    isDetecting,
-  ]);
-
-  return {
-    videoRef,
-    emotion,
-    isDetecting,
-    setIsDetecting,
-  };
 }
