@@ -1,14 +1,12 @@
-import React from "react";
-import { useContext } from "react";
-import { songContext } from "../context/song.context";
+import { useSong } from "../hooks/useSong";
 import "./MoodLibrary.scss";
 
 const MoodLibrary = ({ songs, mood, loading }) => {
 
-    const { setSong } = useContext(songContext);
+    const { song: currentSong, playSong } = useSong();
 
-    function handleSongClick(song) {
-        setSong(song);
+    function handleSongClick(nextSong) {
+        playSong(nextSong, songs);
     }
 
     if (!mood) {

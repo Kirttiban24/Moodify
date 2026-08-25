@@ -1,17 +1,14 @@
-// src/features/Expression/components/FaceExpression.jsx
-
 import { useEffect } from "react";
 import { useFaceExpression } from "../hooks/useFaceExpression";
 
-export default function FaceExpression({
-    onEmotionDetected,
-}) {
+
+const FaceExpression = ({ onEmotionDetected }) => {
 
     const {
         videoRef,
         emotion,
         isDetecting,
-        setIsDetecting,
+        setIsDetecting
     } = useFaceExpression();
 
 
@@ -19,70 +16,52 @@ export default function FaceExpression({
 
         if (
             emotion &&
-            emotion !== "Click Start Detection" &&
             emotion !== "No face detected"
         ) {
-
             onEmotionDetected(emotion);
-
         }
 
-    }, [
-        emotion,
-        onEmotionDetected,
-    ]);
+    }, [emotion, onEmotionDetected]);
 
 
     return (
+        <section className="face-expression">
 
-        <div
-            style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                marginTop: 40,
-            }}
-        >
+            <div className="face-expression__video-wrap">
 
-            <video
-                ref={videoRef}
-                autoPlay
-                playsInline
-                muted
-                width="700"
-                style={{
-                    borderRadius: 20,
-                    border: "5px solid black",
-                }}
-            />
+                <video
+                    ref={videoRef}
+                    autoPlay
+                    playsInline
+                    muted
+                />
+
+            </div>
+
+
+            <p className="face-expression__status">
+
+                {isDetecting
+                    ? "Analyzing your mood..."
+                    : emotion || "Start detection"}
+
+            </p>
+
 
             <button
-                onClick={() =>
-                    setIsDetecting(true)
-                }
+                type="button"
+                onClick={() => setIsDetecting(true)}
                 disabled={isDetecting}
-                style={{
-                    marginTop: 20,
-                    padding: "12px 25px",
-                    fontSize: "16px",
-                    cursor: isDetecting
-                        ? "not-allowed"
-                        : "pointer",
-                    borderRadius: "8px",
-                    border: "none",
-                }}
             >
 
                 {isDetecting
-                    ? "🔍 Analyzing your mood..."
+                    ? "Analyzing..."
                     : "Start Detection"}
 
             </button>
 
-            <h1>
-                {emotion}
-            </h1>
-
-        </div>
+        </section>
     );
-}
+};
+
+export default FaceExpression;

@@ -4,6 +4,8 @@ import {
   FaForward,
   FaPause,
   FaPlay,
+  FaStepBackward,
+  FaStepForward,
   FaVolumeMute,
   FaVolumeUp,
 } from 'react-icons/fa'
@@ -11,7 +13,7 @@ import { useSong } from '../hooks/useSong'
 import './Player.scss'
 
 const Player = () => {
-  const { song, audioRef } = useSong()
+  const { song, audioRef, playNext, playPrevious } = useSong()
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
@@ -109,7 +111,7 @@ const Player = () => {
         src={song?.url}
         onLoadedMetadata={(event) => setDuration(event.currentTarget.duration)}
         onTimeUpdate={(event) => setCurrentTime(event.currentTarget.currentTime)}
-        onEnded={() => setIsPlaying(false)}
+        onEnded={playNext}
       />
 
       <div className="player__details">
@@ -126,17 +128,58 @@ const Player = () => {
 
       <div className="player__main">
         <div className="player__controls">
-          <button type="button" title="Back 5 seconds" onClick={() => seekBy(-5)} disabled={!hasSong}>
-            <FaBackward aria-hidden="true" />
-            <span>5</span>
+
+          <button
+              type="button"
+              title="Previous song"
+              onClick={playPrevious}
+              disabled={!hasSong}
+          >
+              <FaStepBackward aria-hidden="true" />
           </button>
-          <button className="player__play" type="button" title={isPlaying ? 'Pause' : 'Play'} onClick={togglePlayback} disabled={!hasSong}>
-            {isPlaying ? <FaPause aria-hidden="true" /> : <FaPlay aria-hidden="true" />}
+
+          <button
+              type="button"
+              title="Back 5 seconds"
+              onClick={() => seekBy(-5)}
+              disabled={!hasSong}
+          >
+              <FaBackward aria-hidden="true" />
+              <span>5</span>
           </button>
-          <button type="button" title="Forward 5 seconds" onClick={() => seekBy(5)} disabled={!hasSong}>
-            <FaForward aria-hidden="true" />
-            <span>5</span>
+
+          <button
+              className="player__play"
+              type="button"
+              title={isPlaying ? "Pause" : "Play"}
+              onClick={togglePlayback}
+              disabled={!hasSong}
+          >
+              {isPlaying
+                  ? <FaPause aria-hidden="true" />
+                  : <FaPlay aria-hidden="true" />
+              }
           </button>
+
+          <button
+              type="button"
+              title="Forward 5 seconds"
+              onClick={() => seekBy(5)}
+              disabled={!hasSong}
+          >
+              <FaForward aria-hidden="true" />
+              <span>5</span>
+          </button>
+
+          <button
+              type="button"
+              title="Next song"
+              onClick={playNext}
+              disabled={!hasSong}
+          >
+              <FaStepForward aria-hidden="true" />
+          </button>
+
         </div>
 
         <div className="player__timeline">
